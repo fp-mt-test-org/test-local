@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: test
+    backstage.io/kubernetes-id: test
+  name: test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: test
+        backstage.io/kubernetes-id: test
+    spec:
+      containers:
+      - image: test:0.0.1-SNAPSHOT
+        imagePullPolicy: Never
+        name: test
+        resources: {}
+        ports:
+          - containerPort: 8080 
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          periodSeconds: 5
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: test
+    backstage.io/kubernetes-id: test
+  name: test
+spec:
+  ports:
+  - name: 8080-8080
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: test
+  type: ClusterIP
+status:
+  loadBalancer: {}
